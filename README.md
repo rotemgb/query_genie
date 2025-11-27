@@ -56,14 +56,38 @@ python3 -m uvicorn app.main:app --reload
 
 ## LLM Backend
 
-- **Default:** Ollama (`ollama sqlcoder`)  
-- **Optional:** OpenAI  
-  - Set your API key:
+- **Default:** Ollama (`sqlcoder`)  
+- **Optional:** OpenAI (if `OPENAI_API_KEY` is set)
+
+### Installing Ollama
+
+1. Download and install Ollama from [https://ollama.com/download](https://ollama.com/download) for your platform (macOS, Linux, Windows).  
+2. Verify installation:
+
+```bash
+ollama --version
+```
+
+### Pull the SQLCoder model
+
+```bash
+ollama pull sqlcoder
+```
+
+### Test Ollama
+
+```bash
+ollama run sqlcoder --prompt "SELECT name FROM Customer LIMIT 1;"
+```
+
+### Optional: Using OpenAI
 
 ```bash
 export OPENAI_API_KEY="your-openai-key"  # Linux/Mac
 setx OPENAI_API_KEY "your-openai-key"    # Windows
 ```
+
+- QueryGenie will automatically use OpenAI if the key is present.
 
 ---
 
