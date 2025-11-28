@@ -1,6 +1,6 @@
 # QueryGenie
 
-QueryGenie is a FastAPI web app that allows querying an SQLite database using natural language. It uses **Ollama** as the default LLM for SQL generation, with optional OpenAI support if an API key is provided.
+QueryGenie is a quick proof-of-concept (PoC) FastAPI web app that allows querying an SQLite database using natural language. It uses **Ollama** as the default LLM for SQL generation, with optional OpenAI support if an API key is provided.
 
 ---
 
@@ -38,7 +38,7 @@ source .venv/bin/activate  # Linux/Mac
 ### 3. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
 ---
@@ -46,6 +46,7 @@ pip install -r requirements.txt
 ## Running the App
 
 ```bash
+cd backend
 python3 -m uvicorn app.main:app --reload
 ```
 
@@ -77,7 +78,7 @@ ollama pull sqlcoder
 ### Test Ollama
 
 ```bash
-ollama run sqlcoder --prompt "SELECT name FROM Customer LIMIT 1;"
+ollama run sqlcoder "SELECT name FROM Customer LIMIT 1;"
 ```
 
 ### Optional: Using OpenAI
