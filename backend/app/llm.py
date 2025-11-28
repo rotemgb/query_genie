@@ -1,16 +1,7 @@
-import os
 import requests
 
 from app.db import get_db_schema
-
-
-# OpenAI settings
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-
-# Ollama fallback settings
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "sqlcoder")
+from app.config import OPENAI_API_KEY, OPENAI_MODEL, OLLAMA_URL, OLLAMA_MODEL
 
 
 PROMPT_TEMPLATE = """
@@ -60,18 +51,16 @@ def call_ollama(prompt: str) -> str:
 #  CALL OpenAI (only if api key is provided)
 # -------------------------
 def call_openai(prompt: str) -> str:
-
     from openai import OpenAI
 
     client = OpenAI(api_key=OPENAI_API_KEY)
 
-    completion = client.chat.completions.create(
+    completion = client.responses.create(
         model=OPENAI_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=150,
+        input=prompt,
     )
 
-    return completion.choices[0].message["content"].strip()
+    return completion.output_text.strip()
 
 
 def generate_sql(question: str) -> str:

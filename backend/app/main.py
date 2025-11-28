@@ -1,14 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
+
 from app.schemas import QueryRequest, QueryResponse
 from app.llm import generate_sql, is_sql_safe
 from app.db import run_query
 
 app = FastAPI(title="QueryGenie")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-
-from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
 
 @app.get("/docs", include_in_schema=False)
