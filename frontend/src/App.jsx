@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { fetchQuery } from "./api/query";
+import GenieHeader from "./components/GenieHeader";
+import ResultsTable from "./components/ResultsTable";
+import DataSection from "./components/DataSection";
+import "./styles.css";
 
 export default function App() {
   console.log("ENV:", import.meta.env.VITE_API_URL);
@@ -9,65 +13,57 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (queryOverride) => {
     setLoading(true);
     setError("");
     try {
-      const data = await fetchQuery(question);
+      const data = await fetchQuery(queryOverride ?? question);
       setSql(data.sql);
       setResults(data.results);
     } catch (err) {
-      setError(err.message || "Error fetching query");
+      setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
+  const runExample = (example) => {
+    setQuestion(example);
+    handleSubmit(example);
+  };
+
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
-      <h1>QueryGenie</h1>
+    <>
+      <div className="layout">
+        <div className="container">
+          <GenieHeader />
 
-      <textarea
-        rows="3"
-        style={{ width: "100%" }}
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-      />
+          <input
+            type="text"
+            className="query-input"
+            placeholder="What would you like to know?"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+          />
 
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        style={{ marginTop: "1rem" }}
-      >
-        {loading ? "Loading..." : "Run Query"}
-      </button>
+          <button className="button" onClick={handleSubmit} disabled={loading}>
+            {loading ? "Thinking..." : "Run Query"}
+          </button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <div className="error">{error}</div>}
 
-      {sql && (
-        <div style={{ marginTop: "2rem" }}>
-          <h3>Generated SQL:</h3>
-          <pre>{sql}</pre>
+          {sql && (
+            <>
+              <h2>Generated SQL</h2>
+              <pre className="sql-block">{sql}</pre>
+            </>
+          )}
+
+          {results.length > 0 && <ResultsTable results={results} />}
         </div>
-      )}
+      </div>
 
-      {results.length > 0 && (
-        <div style={{ marginTop: "2rem" }}>
-          <h3>Results:</h3>
-          <table border={1} cellPadding={5} style={{ borderCollapse: "collapse" }}>
-            <thead>
-              <tr>{Object.keys(results[0]).map((col) => <th key={col}>{col}</th>)}</tr>
-            </thead>
-            <tbody>
-              {results.map((row, idx) => (
-                <tr key={idx}>
-                  {Object.values(row).map((val, i) => <td key={i}>{val}</td>)}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+      <DataSection onExampleClick={runExample} />
+    </>
   );
 }
