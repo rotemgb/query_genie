@@ -35,7 +35,6 @@ export default function App() {
     handleSubmit(example);
   };
 
-  if (!question.trim()) return;
 
   return (
     <>
