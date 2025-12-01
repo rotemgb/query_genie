@@ -16,8 +16,11 @@ export default function App() {
   const handleSubmit = async (queryOverride) => {
     setLoading(true);
     setError("");
+  
+    const q = queryOverride !== undefined ? queryOverride : question;
+  
     try {
-      const data = await fetchQuery(queryOverride ?? question);
+      const data = await fetchQuery(q);
       setSql(data.sql);
       setResults(data.results);
     } catch (err) {
@@ -31,6 +34,8 @@ export default function App() {
     setQuestion(example);
     handleSubmit(example);
   };
+
+  if (!question.trim()) return;
 
   return (
     <>
@@ -46,7 +51,7 @@ export default function App() {
             onChange={(e) => setQuestion(e.target.value)}
           />
 
-          <button className="button" onClick={handleSubmit} disabled={loading}>
+          <button className="button" onClick={() => handleSubmit()} disabled={loading}>
             {loading ? "Thinking..." : "Run Query"}
           </button>
 
