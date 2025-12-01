@@ -124,7 +124,8 @@ body {
     position: fixed;
     right: 0;
     top: 0;
-    width: 1000px;
+    width: 40vw;
+    max-width: 800px;
     height: 100vh;
     background: white;
     border-left: 1px solid #e5e5e5;
@@ -134,6 +135,15 @@ body {
     z-index: 3000;
     transition: transform 0.3s ease;
     transform: translateX(0);
+  }
+  
+  /* Mobile */
+  @media (max-width: 768px) {
+    .sidebar-panel {
+      width: 100vw;
+      max-width: none;
+      padding: 20px;
+    }
   }
 
   .db-summary {
